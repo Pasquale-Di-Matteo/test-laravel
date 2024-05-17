@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+    app:
+        image: laravelfans/laravel:latest
+        container_name: laravel_app
+        ports:
+            - "8000:80"
+        volumes:
+            - .:/var/www/laravel
+        environment:
+            - DB_HOST=127.0.0.1
+            - DB_DATABASE=test-larvel
+            - DB_USERNAME=root
+            - DB_PASSWORD=admin
+        depends_on:
+            - db
+    db:
+        image: mysql:latest
+        container_name: laravel_db
+        environment:
+            MYSQL_ROOT_PASSWORD: admin
+            MYSQL_DATABASE: test-larvel
+        ports:
+            - "3306:3306"
+        volumes:
+            - dbdata:/var/lib/mysql
+
+    frontend:
+        image: node:latest
+        container_name: vue_frontend
+        working_dir: /app
+        volumes:
+            - .:/app
+        command: npm run dev
+        environment:
+            - CHOKIDAR_USEPOLLING=true
+volumes:
+    dbdata:
